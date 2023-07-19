@@ -1,10 +1,10 @@
 package com.course.runnable;
 
-import com.course.Cache;
+import com.course.service.TokenService;
 
-public record TokenRunnable(Cache cache) implements Runnable{
+public record TokenRunnable(TokenService tokenService) implements Runnable{
     @Override
     public void run() {
-        cache.addToken(10);
+        tokenService.addToken(10);
     }
 }

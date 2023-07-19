@@ -7,10 +7,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public record TokenTimeService(Cache cache) implements TimeService{
+public record TokenTimeService(TokenService tokenService) implements TimeService{
     @Override
     public void onTime() {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(new TokenRunnable(this.cache), 0, 5, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(new TokenRunnable(tokenService), 0, 5, TimeUnit.SECONDS);
     }
 }

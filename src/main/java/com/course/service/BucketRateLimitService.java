@@ -5,15 +5,15 @@ import com.course.model.Request;
 
 import java.text.MessageFormat;
 
-public record BucketRateLimitService(Cache cache) implements RateLimitService{
+public record BucketRateLimitService(TokenService tokenService) implements RateLimitService{
     @Override
     public boolean checkLimit(Request request) {
-        return cache.getTokenCount() > 0;
+        return tokenService.getTokenCount() > 0;
     }
 
     @Override
     public void forward(Request request) {
-        cache.spentToken();
+        tokenService.removeToken();
         System.out.println(MessageFormat.format("Request {0} is forwarded to {1}", request.getId(), request.getDestination()));
     }
 

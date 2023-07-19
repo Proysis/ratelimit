@@ -1,19 +1,17 @@
 package com.course;
 
 import com.course.model.Request;
-import com.course.service.BucketRateLimitService;
-import com.course.service.RateLimitService;
-import com.course.service.TimeService;
-import com.course.service.TokenTimeService;
+import com.course.service.*;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException {
         Cache cache = new Cache();
-        TimeService timeService = new TokenTimeService(cache);
+        TokenService tokenService = new BucketTokenService(cache);
+        TimeService timeService = new TokenTimeService(tokenService);
         timeService.onTime();
 
-        RateLimitService rateLimitService = new BucketRateLimitService(cache);
-        for (Request request : new Cache().getRequestsQueue()) {
+        RateLimitService rateLimitService = new BucketRateLimitService(tokenService);
+        for (Request request : cache.getRequestsQueue()) {
             Thread.sleep(200L);
             if (rateLimitService.checkLimit(request)) {
                 rateLimitService.forward(request);
